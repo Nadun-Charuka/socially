@@ -14,6 +14,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
       decoration: BoxDecoration(
           gradient: customGradientColor,
           borderRadius: BorderRadius.circular(8)),

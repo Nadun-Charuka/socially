@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:socially/firebase_options.dart';
-import 'package:socially/views/responsive/mobile_layout.dart';
-import 'package:socially/views/responsive/responsive_layout.dart';
-import 'package:socially/views/responsive/web_layout.dart';
+import 'package:socially/router/router.dart';
+import 'package:socially/utils/constants/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,12 +16,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      home: ResponsiveLayout(
-        mobileLayout: MobileLayout(),
-        webLayout: WebLayout(),
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        fontFamily: GoogleFonts.poppins().fontFamily,
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.transparent,
+          selectedItemColor: mainOrangeColor,
+          unselectedItemColor: mainWhiteColor,
+        ),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: mainOrangeColor,
+          contentTextStyle: TextStyle(
+            color: mainWhiteColor,
+            fontSize: 16,
+          ),
+        ),
       ),
+      routerConfig: RouterClass.router,
     );
   }
 }
