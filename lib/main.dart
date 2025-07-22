@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:socially/firebase_options.dart';
+import 'package:socially/views/responsive/mobile_layout.dart';
+import 'package:socially/views/responsive/responsive_layout.dart';
+import 'package:socially/views/responsive/web_layout.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +18,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(child: Text("Socially")),
+      home: ResponsiveLayout(
+        mobileLayout: MobileLayout(),
+        webLayout: WebLayout(),
       ),
     );
   }

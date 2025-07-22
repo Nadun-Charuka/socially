@@ -1,0 +1,1 @@
+const webLayoutMinWidth = 550;
