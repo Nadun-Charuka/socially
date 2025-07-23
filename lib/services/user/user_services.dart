@@ -35,12 +35,14 @@ class UserService {
     }
   }
 
-  Future<AppUser?> getUserById(String uid) async {
-    final doc = await _db.collection('users').doc(uid).get();
-    if (doc.exists) {
-      return AppUser.fromMap(doc.data()!);
-    }
-    return null;
+  Stream<AppUser?> getUserById(String uid) {
+    return _db.collection('users').doc(uid).snapshots().map((doc) {
+      if (doc.exists) {
+        return AppUser.fromMap(doc.data()!);
+      } else {
+        return null;
+      }
+    });
   }
 
   Future<String?> uploadProfileImage(File imageFile, String uid) async {

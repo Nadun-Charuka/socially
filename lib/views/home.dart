@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socially/providers/auth_provider.dart';
@@ -15,11 +16,6 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Welcome to Socially!'),
         actions: [
-          IconButton(
-              onPressed: () {
-                ref.refresh(appUserProvider);
-              },
-              icon: Icon(Icons.refresh)),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
@@ -39,9 +35,22 @@ class HomeScreen extends ConsumerWidget {
               children: [
                 CircleAvatar(
                   radius: 60,
-                  backgroundImage: NetworkImage(appUser.photoUrl.isEmpty
-                      ? 'https:/ /i.stack.imgur.com/l60Hf.png'
-                      : appUser.photoUrl),
+                  backgroundColor: Colors.grey[200],
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: appUser.photoUrl.isEmpty
+                          ? 'https://i.stack.imgur.com/l60Hf.png'
+                          : appUser.photoUrl,
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Text(

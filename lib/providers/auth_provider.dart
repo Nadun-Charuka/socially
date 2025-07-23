@@ -6,17 +6,16 @@ import 'package:socially/services/user/user_services.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
+final userServiceProvider = Provider((ref) => UserService());
+
 final authStateProvider = StreamProvider<User?>(
   (ref) => ref.watch(authServiceProvider).authStateChanges,
 );
 
-final appUserProvider = FutureProvider<AppUser?>((ref) async {
+final appUserProvider = StreamProvider<AppUser?>((ref) {
   final firebaseUser = ref.watch(authStateProvider).value;
+  final userService = ref.watch(userServiceProvider);
 
-  if (firebaseUser == null) {
-    return null;
-  }
-
-  final userService = UserService();
-  return await userService.getUserById(firebaseUser.uid);
+  if (firebaseUser == null) return Stream.value(null);
+  return userService.getUserById(firebaseUser.uid);
 });
