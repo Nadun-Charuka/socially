@@ -19,13 +19,13 @@ class AppUser {
 
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
-      uid: map['uid'],
-      email: map['email'],
-      name: map['name'],
-      photoUrl: map['photoUrl'],
-      followers: map['followers'] ?? 0,
-      following: map['following'] ?? 0,
-      isGoogleUser: map['isGoogleUser'] ?? false,
+      uid: map['uid'] as String,
+      email: map['email'] as String,
+      name: map['name'] as String,
+      photoUrl: map['photoUrl'] as String,
+      followers: map['followers'] as int? ?? 0,
+      following: map['following'] as int? ?? 0,
+      isGoogleUser: map['isGoogleUser'] as bool? ?? false,
     );
   }
 

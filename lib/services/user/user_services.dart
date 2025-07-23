@@ -1,12 +1,19 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:socially/models/user_model.dart';
 
 class UserService {
   final _db = FirebaseFirestore.instance;
 
-  Future<void> createUserProfile(
-      User user, String name, bool isGoogleUser) async {
+  final _storage = FirebaseStorage.instance;
+
+  Future<void> createUserProfile(User user, String name, bool isGoogleUser,
+      {String? photoUrl}) async {
+    debugPrint(
+        'DEBUG: createUserProfile - UID: ${user.uid}, Name: $name, IsGoogle: $isGoogleUser, Provided PhotoUrl: $photoUrl');
     final docRef = _db.collection('users').doc(user.uid);
     final doc = await docRef.get();
 
@@ -15,10 +22,16 @@ class UserService {
         uid: user.uid,
         email: user.email ?? '',
         name: name,
-        photoUrl: user.photoURL ?? '',
+        photoUrl: photoUrl ?? '',
         isGoogleUser: isGoogleUser,
       );
       await docRef.set(newUser.toMap());
+    } else {
+      if (isGoogleUser &&
+          user.photoURL != null &&
+          doc.data()?['photoUrl'] != user.photoURL) {
+        await docRef.update({'photoUrl': user.photoURL});
+      }
     }
   }
 
@@ -28,5 +41,17 @@ class UserService {
       return AppUser.fromMap(doc.data()!);
     }
     return null;
+  }
+
+  Future<String?> uploadProfileImage(File imageFile, String uid) async {
+    try {
+      final ref = _storage.ref().child('profilePictures').child('$uid.jpg');
+      await ref.putFile(imageFile);
+      final downloadUrl = await ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('Error uploading image: $e');
+      return null;
+    }
   }
 }

@@ -3,17 +3,17 @@ import 'package:socially/utils/constants/colors.dart';
 
 class CustomInput extends StatelessWidget {
   final TextEditingController controller;
-  final String lableText;
+  final String labelText;
   final IconData icon;
-  final bool obsecureText;
+  final bool obscureText;
   final String? Function(String?) validator;
 
   const CustomInput({
     super.key,
     required this.controller,
-    required this.lableText,
+    required this.labelText,
     required this.icon,
-    required this.obsecureText,
+    required this.obscureText,
     required this.validator,
   });
 
@@ -28,7 +28,7 @@ class CustomInput extends StatelessWidget {
         border: borderStyle,
         focusedBorder: borderStyle,
         enabledBorder: borderStyle,
-        labelText: lableText,
+        labelText: labelText,
         labelStyle: TextStyle(color: mainWhiteColor),
         filled: true,
         prefixIcon: Icon(
@@ -37,7 +37,7 @@ class CustomInput extends StatelessWidget {
           size: 20,
         ),
       ),
-      obscureText: obsecureText,
+      obscureText: obscureText,
       validator: validator,
     );
   }
