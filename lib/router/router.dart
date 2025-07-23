@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socially/views/auth/login_screen.dart';
 import 'package:socially/views/auth/register_screen.dart';
+import 'package:socially/views/home.dart';
 import 'package:socially/views/responsive/mobile_layout.dart';
 import 'package:socially/views/responsive/responsive_layout.dart';
 import 'package:socially/views/responsive/web_layout.dart';
@@ -35,6 +36,11 @@ class RouterClass {
           mobileLayout: MobileLayout(),
           webLayout: WebLayout(),
         ),
+      ),
+      GoRoute(
+        path: "/home",
+        name: "test home",
+        builder: (context, state) => Home(),
       ),
       GoRoute(
         path: "/register",

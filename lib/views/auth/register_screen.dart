@@ -1,19 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:socially/providers/auth_provider.dart';
+import 'package:socially/services/auth/auth_services.dart';
 import 'package:socially/utils/constants/colors.dart';
 import 'package:socially/widgets/reuseable/custom_button.dart';
 import 'package:socially/widgets/reuseable/custom_input.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();
@@ -38,6 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = ref.read(authServiceProvider);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -144,14 +148,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                     ),
                     CustomButton(
-                      text: 'Sign Up',
-                      width: MediaQuery.of(context).size.width,
-                      onPressed: () async {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          // todo
-                        }
-                      },
-                    ),
+                        text: 'Sign Up',
+                        width: MediaQuery.of(context).size.width,
+                        onPressed: () async {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            await authService.registerWithEmail(
+                              _emailController.text,
+                              _passwordController.text,
+                              _nameController.text,
+                            );
+                          }
+                        }),
                     TextButton(
                       onPressed: () {
                         GoRouter.of(context).go("/login");

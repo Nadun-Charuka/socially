@@ -1,49 +1,43 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-class UserModel {
-  final String userId;
-  final String name;
+class AppUser {
+  final String uid;
   final String email;
-  final String imageUrl;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String password;
+  final String name;
+  final String photoUrl;
   final int followers;
+  final int following;
+  final bool isGoogleUser;
 
-  UserModel({
-    required this.userId,
-    required this.name,
+  AppUser({
+    required this.uid,
     required this.email,
-    required this.imageUrl,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.password,
-    required this.followers,
+    required this.name,
+    required this.photoUrl,
+    this.followers = 0,
+    this.following = 0,
+    this.isGoogleUser = false,
   });
 
-  factory UserModel.fromMap(Map<String, dynamic> json) {
-    return UserModel(
-      userId: json['userId'] ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
-      createdAt: (json['createdAt'] as Timestamp).toDate(),
-      updatedAt: (json['updatedAt'] as Timestamp).toDate(),
-      password: json['password'] ?? '',
-      followers: json['followers'] ?? 0,
+  factory AppUser.fromMap(Map<String, dynamic> map) {
+    return AppUser(
+      uid: map['uid'],
+      email: map['email'],
+      name: map['name'],
+      photoUrl: map['photoUrl'],
+      followers: map['followers'] ?? 0,
+      following: map['following'] ?? 0,
+      isGoogleUser: map['isGoogleUser'] ?? false,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'userId': userId,
-      'name': name,
+      'uid': uid,
       'email': email,
-      'imageUrl': imageUrl,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'password': password,
+      'name': name,
+      'photoUrl': photoUrl,
       'followers': followers,
+      'following': following,
+      'isGoogleUser': isGoogleUser,
     };
   }
 }

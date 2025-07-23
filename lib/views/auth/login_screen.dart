@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:socially/providers/auth_provider.dart';
+import 'package:socially/services/auth/auth_services.dart';
 import 'package:socially/utils/constants/colors.dart';
 import 'package:socially/widgets/reuseable/custom_button.dart';
 import 'package:socially/widgets/reuseable/custom_input.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   LoginScreen({super.key});
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authService = ref.read(authServiceProvider);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -39,7 +44,7 @@ class LoginScreen extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value!)) {
+                        if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
                           return 'Please enter a valid email address';
                         }
                         return null;
@@ -65,7 +70,10 @@ class LoginScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       onPressed: () async {
                         if (_formKey.currentState?.validate() ?? false) {
-                          //todo firebase login
+                          await authService.loginWithEmail(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
                         }
                       },
                     ),
@@ -77,12 +85,11 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     CustomButton(
-                      text: "Sign in with Google",
-                      width: MediaQuery.of(context).size.width,
-                      onPressed: () {
-                        //todo google login
-                      },
-                    ),
+                        text: "Sign in with Google",
+                        width: MediaQuery.of(context).size.width,
+                        onPressed: () async {
+                          await authService.loginWithGoogle();
+                        }),
                     TextButton(
                       onPressed: () {
                         GoRouter.of(context).go("/register");
