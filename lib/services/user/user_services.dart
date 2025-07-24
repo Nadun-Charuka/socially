@@ -25,7 +25,7 @@ class UserService {
         photoUrl: photoUrl ?? '',
         isGoogleUser: isGoogleUser,
       );
-      await docRef.set(newUser.toMap());
+      await docRef.set(newUser.toJson());
     } else {
       if (isGoogleUser &&
           user.photoURL != null &&

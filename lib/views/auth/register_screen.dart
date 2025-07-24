@@ -69,7 +69,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             : const CircleAvatar(
                                 radius: 64,
                                 backgroundImage: NetworkImage(
-                                  "https://i.stack.imgur.com/l60Hf.png",
+                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTtKDBHoGq6L5htfFMFrluklPkLsQd4e3PAg&s",
                                 ),
                               ),
                         Positioned(
@@ -194,7 +194,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                           if (user != null) {
                             String finalPhotoUrl =
-                                'https://i.stack.imgur.com/l60Hf.png';
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTtKDBHoGq6L5htfFMFrluklPkLsQd4e3PAg&s';
 
                             if (_imageFile != null) {
                               debugPrint(

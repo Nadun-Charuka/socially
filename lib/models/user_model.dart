@@ -17,19 +17,19 @@ class AppUser {
     this.isGoogleUser = false,
   });
 
-  factory AppUser.fromMap(Map<String, dynamic> map) {
+  factory AppUser.fromMap(Map<String, dynamic> json) {
     return AppUser(
-      uid: map['uid'] as String,
-      email: map['email'] as String,
-      name: map['name'] as String,
-      photoUrl: map['photoUrl'] as String,
-      followers: map['followers'] as int? ?? 0,
-      following: map['following'] as int? ?? 0,
-      isGoogleUser: map['isGoogleUser'] as bool? ?? false,
+      uid: json['uid'] as String,
+      email: json['email'] as String,
+      name: json['name'] as String,
+      photoUrl: json['photoUrl'] as String,
+      followers: json['followers'] as int? ?? 0,
+      following: json['following'] as int? ?? 0,
+      isGoogleUser: json['isGoogleUser'] as bool? ?? false,
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'uid': uid,
       'email': email,

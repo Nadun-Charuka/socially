@@ -2,12 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:socially/firebase_options.dart';
 import 'package:socially/providers/auth_provider.dart';
-
+import 'package:socially/utils/constants/colors.dart';
 import 'package:socially/views/auth/login_screen.dart';
 import 'package:socially/views/auth/register_screen.dart';
-import 'package:socially/views/home.dart';
+import 'package:socially/views/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,7 @@ class MyApp extends ConsumerWidget {
             return authState.when(
               data: (user) {
                 if (user != null) {
-                  return const HomeScreen();
+                  return const MainScreen();
                 } else {
                   return LoginScreen();
                 }
@@ -74,10 +75,15 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Socially App',
+      title: 'Socially',
       theme: ThemeData(
+        fontFamily: GoogleFonts.poppins().fontFamily,
         brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.transparent,
+          selectedItemColor: mainOrangeColor,
+          unselectedItemColor: mainWhiteColor,
+        ),
       ),
       routerConfig: router,
     );

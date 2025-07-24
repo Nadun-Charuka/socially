@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socially/providers/auth_provider.dart';
 
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+class ProfileScreen extends ConsumerWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,23 +33,11 @@ class HomeScreen extends ConsumerWidget {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.grey[200],
-                  child: ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: appUser.photoUrl.isEmpty
-                          ? 'https://i.stack.imgur.com/l60Hf.png'
-                          : appUser.photoUrl,
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
+                ClipOval(
+                  child: CachedNetworkImage(
+                    width: 120,
+                    height: 120,
+                    imageUrl: appUser.photoUrl,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -70,7 +58,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 30),
                 const Text(
-                  'This is your home screen!',
+                  'This is your Profile',
                   style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
                 ),
                 const Text(
