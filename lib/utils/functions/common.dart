@@ -8,13 +8,16 @@ void showSnackBar({
 }) {
   final snackBgColor = isWarn ? mainOrangeColor : Colors.grey[900];
   final snackTextColor = isWarn ? Colors.black : Colors.white;
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      backgroundColor: snackBgColor,
-      content: Text(
-        text,
-        style: TextStyle(color: snackTextColor),
+
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: snackBgColor,
+        content: Text(
+          text,
+          style: TextStyle(color: snackTextColor),
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

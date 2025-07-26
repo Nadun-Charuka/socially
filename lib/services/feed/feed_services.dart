@@ -35,7 +35,7 @@ class FeedServices {
       debugPrint("🔥 Got ${snapshot.docs.length} posts");
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
-        debugPrint("📄 Post: ${data.toString()}");
+
         return PostModel.fromJson(data);
       }).toList();
     });
@@ -43,5 +43,58 @@ class FeedServices {
 
   Future<void> deletePost(String postId) async {
     await _feedCollection.doc(postId).delete();
+  }
+
+  Future<void> likePost(
+      {required String postId, required String userId}) async {
+    try {
+      final postLikesRef =
+          _feedCollection.doc(postId).collection('likes').doc(userId);
+
+      await postLikesRef.set({'likedAt': Timestamp.now()});
+
+      final postDoc = await _feedCollection.doc(postId).get();
+      final post = PostModel.fromJson(postDoc.data() as Map<String, dynamic>);
+      final newLikesCount = post.likes + 1;
+
+      await _feedCollection.doc(postId).update({'likes': newLikesCount});
+
+      debugPrint('Post liked successfully');
+    } catch (error) {
+      debugPrint('Error liking post: $error');
+    }
+  }
+
+  Future<void> unlikePost(
+      {required String postId, required String userId}) async {
+    try {
+      final postLikesRef =
+          _feedCollection.doc(postId).collection('likes').doc(userId);
+
+      await postLikesRef.delete();
+
+      final postDoc = await _feedCollection.doc(postId).get();
+      final post = PostModel.fromJson(postDoc.data() as Map<String, dynamic>);
+      final newLikesCount = post.likes - 1;
+
+      await _feedCollection.doc(postId).update({'likes': newLikesCount});
+
+      debugPrint('Post unliked successfully');
+    } catch (error) {
+      debugPrint('Error unliking post: $error');
+    }
+  }
+
+  Future<bool> hasUserLikedPost(
+      {required String postId, required String userId}) async {
+    try {
+      final DocumentReference postLikeRef =
+          _feedCollection.doc(postId).collection("likes").doc(userId);
+      final snapshot = await postLikeRef.get();
+      return snapshot.exists;
+    } catch (e) {
+      debugPrint('Error checking if the user liked the post: $e');
+      return false;
+    }
   }
 }

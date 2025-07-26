@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:socially/models/post_model.dart';
 import 'package:socially/providers/auth_provider.dart';
+import 'package:socially/services/auth/auth_services.dart';
 import 'package:socially/services/feed/feed_services.dart';
 import 'package:socially/utils/constants/colors.dart';
+import 'package:socially/utils/functions/common.dart';
 import 'package:socially/utils/functions/mood.dart';
 
 class PostWidget extends ConsumerStatefulWidget {
@@ -20,10 +22,55 @@ class PostWidget extends ConsumerStatefulWidget {
 }
 
 class _PostWidgetState extends ConsumerState<PostWidget> {
+  final FeedServices feedService = FeedServices();
+  final currentUser = AuthService().currentUser;
+  bool isLiked = false;
+  //check liked or dislike
+  Future<void> _checkIfUserLiked() async {
+    final bool hasLiked = await feedService.hasUserLikedPost(
+      postId: widget.post.postId,
+      userId: currentUser!.uid,
+    );
+    setState(() {
+      isLiked = hasLiked;
+    });
+  }
+
+  void _likeOrDisLikePost() async {
+    try {
+      if (isLiked) {
+        await feedService.unlikePost(
+          postId: widget.post.postId,
+          userId: currentUser!.uid,
+        );
+        setState(() {
+          isLiked = false;
+        });
+        showSnackBar(text: "Post Unliked", context: context);
+      } else {
+        await feedService.likePost(
+          postId: widget.post.postId,
+          userId: currentUser!.uid,
+        );
+        setState(() {
+          isLiked = true;
+        });
+        showSnackBar(text: "Post Liked", context: context);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfUserLiked();
+  }
+
   @override
   Widget build(BuildContext context) {
     final appUserAsyncValue = ref.watch(appUserProvider);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 5,
@@ -91,9 +138,12 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
         Row(
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                _likeOrDisLikePost();
+              },
               icon: Icon(
-                Icons.favorite_border_outlined,
+                isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                color: isLiked ? Colors.pink : null,
               ),
             ),
             Text(widget.post.likes.toString()),
