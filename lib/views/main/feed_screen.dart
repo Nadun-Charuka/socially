@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socially/providers/feed_provider.dart';
-import 'package:socially/widgets/main/post_widget.dart';
+import 'package:socially/widgets/main/post/post_widget.dart';
 
 class FeedScreen extends ConsumerWidget {
   const FeedScreen({super.key});

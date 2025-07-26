@@ -77,14 +77,16 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'Socially',
       theme: ThemeData(
-        fontFamily: GoogleFonts.poppins().fontFamily,
-        brightness: Brightness.dark,
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Colors.transparent,
-          selectedItemColor: mainOrangeColor,
-          unselectedItemColor: mainWhiteColor,
-        ),
-      ),
+          fontFamily: GoogleFonts.poppins().fontFamily,
+          brightness: Brightness.dark,
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: Colors.transparent,
+            selectedItemColor: mainOrangeColor,
+            unselectedItemColor: mainWhiteColor,
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: mainOrangeColor,
+          )),
       routerConfig: router,
     );
   }
