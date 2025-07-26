@@ -10,27 +10,31 @@ class FeedScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final feedAsync = ref.watch(feedStreamProvider);
 
-    return SingleChildScrollView(
-      child: SafeArea(
-        child: feedAsync.when(
-          data: (posts) {
-            return ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
-                  child: PostWidget(post: post),
+    return Scaffold(
+      body: feedAsync.when(
+        data: (posts) {
+          return posts.isNotEmpty
+              ? SingleChildScrollView(
+                  child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
+                      final post = posts[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 16),
+                        child: PostWidget(post: post),
+                      );
+                    },
+                  ),
+                )
+              : Center(
+                  child: Text("No Feeds"),
                 );
-              },
-            );
-          },
-          loading: () => const CircularProgressIndicator(),
-          error: (e, st) => Text("Error loading feed: $e"),
-        ),
+        },
+        loading: () => const CircularProgressIndicator(),
+        error: (e, st) => Text("Error loading feed: $e"),
       ),
     );
   }

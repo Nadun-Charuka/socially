@@ -20,10 +20,16 @@ class _MainScreenState extends State<MainScreen> {
     ReelsScreen(),
     ProfileScreen(),
   ];
-  int _selectedIndex = 3;
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Image.asset(
+          "assets/logo.png",
+          height: 70,
+        ),
+      ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {

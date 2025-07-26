@@ -11,11 +11,13 @@ class FeedServices {
   Future<void> savePost(PostModel post) async {
     try {
       await _feedCollection.doc(post.postId).set(post.toJson());
+      debugPrint("reel saved sucessfully");
     } catch (e) {
       debugPrint("Error saving post: $e");
     }
   }
 
+//upload post
   Future<String?> uploadPostImage(File imageFile, String uid) async {
     try {
       final ref = FirebaseStorage.instance
@@ -35,7 +37,7 @@ class FeedServices {
         .orderBy('datePublished', descending: true)
         .snapshots()
         .map((snapshot) {
-      debugPrint("🔥 Got ${snapshot.docs.length} posts");
+      // debugPrint("🔥 Got ${snapshot.docs.length} posts");
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
 

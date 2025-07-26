@@ -12,7 +12,7 @@ final authStateProvider = StreamProvider<User?>(
   (ref) => ref.watch(authServiceProvider).authStateChanges,
 );
 
-final appUserProvider = StreamProvider<AppUser?>((ref) {
+final appUserProvider = StreamProvider<UserModel?>((ref) {
   final firebaseUser = ref.watch(authStateProvider).value;
   final userService = ref.watch(userServiceProvider);
 

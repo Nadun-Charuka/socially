@@ -10,15 +10,13 @@ class UserService {
 
   final _storage = FirebaseStorage.instance;
 
-  Future<void> createUserProfile(User user, String name, bool isGoogleUser,
+  Future<void> saveUser(User user, String name, bool isGoogleUser,
       {String? photoUrl}) async {
-    debugPrint(
-        'DEBUG: createUserProfile - UID: ${user.uid}, Name: $name, IsGoogle: $isGoogleUser, Provided PhotoUrl: $photoUrl');
     final docRef = _db.collection('users').doc(user.uid);
     final doc = await docRef.get();
 
     if (!doc.exists) {
-      final newUser = AppUser(
+      final newUser = UserModel(
         uid: user.uid,
         email: user.email ?? '',
         name: name,
@@ -35,10 +33,10 @@ class UserService {
     }
   }
 
-  Stream<AppUser?> getUserById(String uid) {
+  Stream<UserModel?> getUserById(String uid) {
     return _db.collection('users').doc(uid).snapshots().map((doc) {
       if (doc.exists) {
-        return AppUser.fromMap(doc.data()!);
+        return UserModel.fromMap(doc.data()!);
       } else {
         return null;
       }

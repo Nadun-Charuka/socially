@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socially/providers/auth_provider.dart';
+import 'package:socially/utils/constants/colors.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -13,17 +14,6 @@ class ProfileScreen extends ConsumerWidget {
     final authService = ref.read(authServiceProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Welcome to Socially!'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await authService.logout();
-            },
-          ),
-        ],
-      ),
       body: Center(
         child: appUserAsyncValue.when(
           data: (appUser) {
@@ -38,6 +28,10 @@ class ProfileScreen extends ConsumerWidget {
                     width: 120,
                     height: 120,
                     imageUrl: appUser.photoUrl,
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.person,
+                      size: 70,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -65,6 +59,21 @@ class ProfileScreen extends ConsumerWidget {
                   'More features coming soon...',
                   style: TextStyle(fontSize: 16, color: Colors.white70),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Log out"),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.logout,
+                        color: mainOrangeColor,
+                      ),
+                      onPressed: () async {
+                        await authService.logout();
+                      },
+                    ),
+                  ],
+                )
               ],
             );
           },

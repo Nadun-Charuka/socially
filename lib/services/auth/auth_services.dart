@@ -62,7 +62,7 @@ class AuthService {
       final user = result.user;
 
       if (user != null) {
-        await _userService.createUserProfile(
+        await _userService.saveUser(
           user,
           user.displayName ?? 'Google User',
           true,

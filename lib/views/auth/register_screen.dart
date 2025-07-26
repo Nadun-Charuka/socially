@@ -214,8 +214,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               debugPrint(
                                   'No image file selected. Using default.');
                             }
+                            await user.updatePhotoURL(finalPhotoUrl);
+                            await user.updateDisplayName(_nameController.text);
+                            await user.reload();
 
-                            await userService.createUserProfile(
+                            await userService.saveUser(
                               user,
                               _nameController.text,
                               false,

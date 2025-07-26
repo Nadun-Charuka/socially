@@ -1,4 +1,4 @@
-class AppUser {
+class UserModel {
   final String uid;
   final String email;
   final String name;
@@ -7,7 +7,7 @@ class AppUser {
   final int following;
   final bool isGoogleUser;
 
-  AppUser({
+  UserModel({
     required this.uid,
     required this.email,
     required this.name,
@@ -17,8 +17,8 @@ class AppUser {
     this.isGoogleUser = false,
   });
 
-  factory AppUser.fromMap(Map<String, dynamic> json) {
-    return AppUser(
+  factory UserModel.fromMap(Map<String, dynamic> json) {
+    return UserModel(
       uid: json['uid'] as String,
       email: json['email'] as String,
       name: json['name'] as String,
