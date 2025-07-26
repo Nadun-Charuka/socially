@@ -170,8 +170,16 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
                               icon: Icons.delete,
                               text: 'Delete',
                               onTap: () async {
-                                await FeedServices()
-                                    .deletePost(widget.post.postId);
+                                await FeedServices().deletePost(
+                                  widget.post.postId,
+                                  widget.post.postUrl,
+                                );
+                                showSnackBar(
+                                  text: "Post Deleted",
+                                  context: context,
+                                );
+                                if (context.mounted)
+                                  Navigator.of(context).pop();
                               },
                             ),
                           ],

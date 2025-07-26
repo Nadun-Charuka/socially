@@ -31,7 +31,10 @@ class FeedServices {
   }
 
   Stream<List<PostModel>> getPostStream() {
-    return _feedCollection.snapshots().map((snapshot) {
+    return _feedCollection
+        .orderBy('datePublished', descending: true)
+        .snapshots()
+        .map((snapshot) {
       debugPrint("🔥 Got ${snapshot.docs.length} posts");
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
@@ -41,8 +44,9 @@ class FeedServices {
     });
   }
 
-  Future<void> deletePost(String postId) async {
+  Future<void> deletePost(String postId, String postUrl) async {
     await _feedCollection.doc(postId).delete();
+    await FirebaseStorage.instance.refFromURL(postUrl).delete();
   }
 
   Future<void> likePost(
