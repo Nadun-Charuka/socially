@@ -46,6 +46,24 @@ class FeedServices {
     });
   }
 
+  Stream<List<PostModel>> getPostById(String userId) {
+    return _feedCollection.where('userId', isEqualTo: userId).snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map(
+          (doc) {
+            return PostModel.fromJson(doc.data() as Map<String, dynamic>);
+          },
+        ).toList();
+      },
+    );
+  }
+
+  Stream<PostModel> getSinglePostStream(String postId) {
+    return _feedCollection.doc(postId).snapshots().map(
+          (doc) => PostModel.fromJson(doc.data()! as Map<String, dynamic>),
+        );
+  }
+
   Future<void> deletePost(String postId, String postUrl) async {
     await _feedCollection.doc(postId).delete();
     await FirebaseStorage.instance.refFromURL(postUrl).delete();

@@ -31,9 +31,11 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
       postId: widget.post.postId,
       userId: currentUser!.uid,
     );
-    setState(() {
-      isLiked = hasLiked;
-    });
+    if (mounted) {
+      setState(() {
+        isLiked = hasLiked;
+      });
+    }
   }
 
   void _likeOrDisLikePost() async {

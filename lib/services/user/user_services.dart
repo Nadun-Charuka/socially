@@ -10,6 +10,9 @@ class UserService {
 
   final _storage = FirebaseStorage.instance;
 
+  final CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection("users");
+
   Future<void> saveUser(User user, String name, bool isGoogleUser,
       {String? photoUrl}) async {
     final docRef = _db.collection('users').doc(user.uid);
@@ -36,11 +39,25 @@ class UserService {
   Stream<UserModel?> getUserById(String uid) {
     return _db.collection('users').doc(uid).snapshots().map((doc) {
       if (doc.exists) {
-        return UserModel.fromMap(doc.data()!);
+        return UserModel.fromJson(doc.data()!);
       } else {
         return null;
       }
     });
+  }
+
+  Future<List<UserModel>> getAllUsers() async {
+    try {
+      final snapshot = await _userCollection.get();
+      return snapshot.docs
+          .map(
+            (doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>),
+          )
+          .toList();
+    } catch (e) {
+      debugPrint("error in user fetching for search user: $e");
+      return [];
+    }
   }
 
   Future<String?> uploadProfileImage(File imageFile, String uid) async {

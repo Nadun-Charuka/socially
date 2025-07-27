@@ -17,7 +17,7 @@ class UserModel {
     this.isGoogleUser = false,
   });
 
-  factory UserModel.fromMap(Map<String, dynamic> json) {
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       uid: json['uid'] as String,
       email: json['email'] as String,

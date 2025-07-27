@@ -4,10 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socially/firebase_options.dart';
+import 'package:socially/models/post_model.dart';
+import 'package:socially/models/user_model.dart';
 import 'package:socially/providers/auth_provider.dart';
 import 'package:socially/utils/constants/colors.dart';
 import 'package:socially/views/auth/login_screen.dart';
 import 'package:socially/views/auth/register_screen.dart';
+import 'package:socially/views/main/single_post_screen.dart';
+import 'package:socially/views/main/single_user_screen.dart';
 import 'package:socially/views/main_screen.dart';
 
 void main() async {
@@ -55,6 +59,24 @@ class MyApp extends ConsumerWidget {
           path: '/login',
           name: 'login',
           builder: (context, state) => LoginScreen(),
+        ),
+        GoRoute(
+          path: '/single-user-screen',
+          name: 'single-user-screen',
+          builder: (context, state) {
+            final UserModel user = state.extra as UserModel;
+            return SingleUserScreen(user: user);
+          },
+        ),
+        GoRoute(
+          path: '/single-post-screen',
+          name: 'single-post-screen',
+          builder: (context, state) {
+            final String postId = state.extra as String;
+            return SinglePostScreen(
+              postId: postId,
+            );
+          },
         ),
       ],
       redirect: (context, state) {
