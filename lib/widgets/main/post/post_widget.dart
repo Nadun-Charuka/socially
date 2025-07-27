@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:socially/models/post_model.dart';
-import 'package:socially/providers/auth_provider.dart';
+import 'package:socially/providers/feed_provider.dart';
+import 'package:socially/providers/user_provider.dart';
 import 'package:socially/services/auth/auth_services.dart';
-import 'package:socially/services/feed/feed_services.dart';
 import 'package:socially/utils/constants/colors.dart';
 import 'package:socially/utils/functions/common.dart';
 import 'package:socially/utils/functions/mood.dart';
@@ -22,41 +23,20 @@ class PostWidget extends ConsumerStatefulWidget {
 }
 
 class _PostWidgetState extends ConsumerState<PostWidget> {
-  final FeedServices feedService = FeedServices();
   final currentUser = AuthService().currentUser;
-  bool isLiked = false;
-  //check liked or dislike
-  Future<void> _checkIfUserLiked() async {
-    final bool hasLiked = await feedService.hasUserLikedPost(
-      postId: widget.post.postId,
-      userId: currentUser!.uid,
-    );
-    if (mounted) {
-      setState(() {
-        isLiked = hasLiked;
-      });
-    }
-  }
 
-  void _likeOrDisLikePost() async {
+  void _likeOrDisLikePost(bool isLiked) async {
+    final feedService = ref.read(feedProvider);
+    final userId = ref.read(appUserProvider).value?.uid;
+    if (userId == null) return;
+
     try {
       if (isLiked) {
         await feedService.unlikePost(
-          postId: widget.post.postId,
-          userId: currentUser!.uid,
-        );
-        setState(() {
-          isLiked = false;
-        });
+            postId: widget.post.postId, userId: userId);
         showSnackBar(text: "Post Unliked", context: context);
       } else {
-        await feedService.likePost(
-          postId: widget.post.postId,
-          userId: currentUser!.uid,
-        );
-        setState(() {
-          isLiked = true;
-        });
+        await feedService.likePost(postId: widget.post.postId, userId: userId);
         showSnackBar(text: "Post Liked", context: context);
       }
     } catch (e) {
@@ -65,13 +45,9 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _checkIfUserLiked();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final postOwner = ref.watch(getUserByIdProvider(widget.post.userId));
+    final hasLikedAsync = ref.watch(hasUserLikedProvider(widget.post.postId));
     final appUserAsyncValue = ref.watch(appUserProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,12 +66,18 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.post.username,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                InkWell(
+                  child: Text(
+                    widget.post.username,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  onTap: () {
+                    GoRouter.of(context)
+                        .push('/single-user-screen', extra: postOwner.value);
+                  },
                 ),
                 Text(
                   DateFormat("dd-MM-yyyy : hh:mm: a")
@@ -139,14 +121,20 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
         ),
         Row(
           children: [
-            IconButton(
-              onPressed: () {
-                _likeOrDisLikePost();
-              },
-              icon: Icon(
-                isLiked ? Icons.favorite : Icons.favorite_border_outlined,
-                color: isLiked ? Colors.pink : null,
+            hasLikedAsync.when(
+              data: (isLiked) => IconButton(
+                onPressed: () {
+                  _likeOrDisLikePost(isLiked); // pass value from stream
+                },
+                icon: Icon(
+                  isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                  color: isLiked ? Colors.pink : null,
+                ),
               ),
+              loading: () => IconButton(
+                  onPressed: null, icon: Icon(Icons.favorite_border)),
+              error: (_, __) =>
+                  IconButton(onPressed: null, icon: Icon(Icons.error)),
             ),
             Text(widget.post.likes.toString()),
             Spacer(),
@@ -172,7 +160,8 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
                               icon: Icons.delete,
                               text: 'Delete',
                               onTap: () async {
-                                await FeedServices().deletePost(
+                                final feedService = ref.read(feedProvider);
+                                await feedService.deletePost(
                                   widget.post.postId,
                                   widget.post.postUrl,
                                 );

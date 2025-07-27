@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socially/providers/auth_provider.dart';
+import 'package:socially/providers/user_provider.dart';
 import 'package:socially/utils/constants/colors.dart';
 
 class ProfileScreen extends ConsumerWidget {

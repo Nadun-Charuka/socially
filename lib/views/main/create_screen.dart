@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:socially/models/post_model.dart';
 import 'package:socially/providers/auth_provider.dart';
+import 'package:socially/providers/user_provider.dart';
 import 'package:socially/services/feed/feed_services.dart';
 import 'package:socially/utils/functions/common.dart';
 import 'package:socially/utils/functions/mood.dart';

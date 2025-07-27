@@ -10,7 +10,7 @@ class SinglePostScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postAsync = ref.watch(singlePostProvider(postId));
+    final postAsync = ref.watch(singleFeedProvider(postId));
 
     return Scaffold(
       appBar: AppBar(title: Text("Post")),

@@ -69,19 +69,30 @@ class FeedServices {
     await FirebaseStorage.instance.refFromURL(postUrl).delete();
   }
 
-  Future<void> likePost(
-      {required String postId, required String userId}) async {
+  Stream<bool> hasUserLikedStream({
+    required String postId,
+    required String userId,
+  }) {
+    return _feedCollection
+        .doc(postId)
+        .collection("likes")
+        .doc(userId)
+        .snapshots()
+        .map((doc) => doc.exists);
+  }
+
+  Future<void> likePost({
+    required String postId,
+    required String userId,
+  }) async {
     try {
       final postLikesRef =
           _feedCollection.doc(postId).collection('likes').doc(userId);
 
       await postLikesRef.set({'likedAt': Timestamp.now()});
-
-      final postDoc = await _feedCollection.doc(postId).get();
-      final post = PostModel.fromJson(postDoc.data() as Map<String, dynamic>);
-      final newLikesCount = post.likes + 1;
-
-      await _feedCollection.doc(postId).update({'likes': newLikesCount});
+      await _feedCollection.doc(postId).update({
+        'likes': FieldValue.increment(1),
+      });
 
       debugPrint('Post liked successfully');
     } catch (error) {
@@ -89,19 +100,18 @@ class FeedServices {
     }
   }
 
-  Future<void> unlikePost(
-      {required String postId, required String userId}) async {
+  Future<void> unlikePost({
+    required String postId,
+    required String userId,
+  }) async {
     try {
       final postLikesRef =
           _feedCollection.doc(postId).collection('likes').doc(userId);
 
       await postLikesRef.delete();
-
-      final postDoc = await _feedCollection.doc(postId).get();
-      final post = PostModel.fromJson(postDoc.data() as Map<String, dynamic>);
-      final newLikesCount = post.likes - 1;
-
-      await _feedCollection.doc(postId).update({'likes': newLikesCount});
+      await _feedCollection.doc(postId).update({
+        'likes': FieldValue.increment(-1),
+      });
 
       debugPrint('Post unliked successfully');
     } catch (error) {
