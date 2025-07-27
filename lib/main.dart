@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socially/firebase_options.dart';
-import 'package:socially/models/post_model.dart';
 import 'package:socially/models/user_model.dart';
 import 'package:socially/providers/auth_provider.dart';
 import 'package:socially/utils/constants/colors.dart';

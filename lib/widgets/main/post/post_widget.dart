@@ -34,10 +34,10 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
       if (isLiked) {
         await feedService.unlikePost(
             postId: widget.post.postId, userId: userId);
-        showSnackBar(text: "Post Unliked", context: context);
+        if (mounted) showSnackBar(text: "Post Unliked", context: context);
       } else {
         await feedService.likePost(postId: widget.post.postId, userId: userId);
-        showSnackBar(text: "Post Liked", context: context);
+        if (mounted) showSnackBar(text: "Post Liked", context: context);
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -165,12 +165,15 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
                                   widget.post.postId,
                                   widget.post.postUrl,
                                 );
-                                showSnackBar(
-                                  text: "Post Deleted",
-                                  context: context,
-                                );
-                                if (context.mounted)
+                                if (context.mounted) {
+                                  showSnackBar(
+                                    text: "Post Deleted",
+                                    context: context,
+                                  );
+                                }
+                                if (context.mounted) {
                                   Navigator.of(context).pop();
+                                }
                               },
                             ),
                           ],

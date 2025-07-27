@@ -58,26 +58,26 @@ class _AddReelsWidgetState extends State<AddReelsWidget> {
         return;
       }
       final imgUrl = await reelService.uploadVideo(
-          videoFile: _videoFile!, userId: currentUser!.uid);
+          videoFile: _videoFile!, userId: currentUser.uid);
 
       final reelId = FirebaseFirestore.instance.collection('reels').doc().id;
       final newReel = ReelModel(
         caption: captionController.text.trim(),
         videoUrl: imgUrl,
-        userId: currentUser!.uid,
+        userId: currentUser.uid,
         reelId: reelId,
         datePublished: DateTime.now(),
-        userName: currentUser!.displayName!,
-        userProfileImg: currentUser!.photoURL!,
+        userName: currentUser.displayName!,
+        userProfileImg: currentUser.photoURL!,
       );
       debugPrint("new reel created");
       reelService.saveReel(newReel);
       setState(() {
         _isUploading = false;
       });
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
       debugPrint("new reel uploaded sucessfully");
-      showSnackBar(text: "Reels Uploaded", context: context);
+      if (mounted) showSnackBar(text: "Reels Uploaded", context: context);
     } else {
       Navigator.of(context).pop();
 

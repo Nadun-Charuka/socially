@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:socially/models/post_model.dart';
-import 'package:socially/providers/auth_provider.dart';
 import 'package:socially/providers/user_provider.dart';
 import 'package:socially/services/feed/feed_services.dart';
 import 'package:socially/utils/functions/common.dart';
@@ -152,10 +151,11 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
 
                           await FeedServices().savePost(newPost);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text("Post created successfully")),
-                          );
+                          if (context.mounted) {
+                            showSnackBar(
+                                text: "Post created successfully",
+                                context: context);
+                          }
 
                           setState(() {
                             _isUploading = false;
