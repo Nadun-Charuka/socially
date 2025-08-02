@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socially/models/user_model.dart';
 import 'package:socially/providers/feed_provider.dart';
-import 'package:socially/widgets/reuseable/custom_button.dart';
+import 'package:socially/providers/user_provider.dart';
+
+import 'package:socially/widgets/reuseable/follow_button.dart';
 
 class SingleUserScreen extends ConsumerStatefulWidget {
   final UserModel user;
@@ -21,6 +23,9 @@ class _SingleUserScreenState extends ConsumerState<SingleUserScreen> {
   @override
   Widget build(BuildContext context) {
     final feedAsync = ref.watch(feedByIdProvider(widget.user.uid));
+    final followersAsync = ref.watch(followersProvider(widget.user.uid));
+    final followingAsync = ref.watch(followingProvider(_currentUser.uid));
+
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -50,24 +55,49 @@ class _SingleUserScreenState extends ConsumerState<SingleUserScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        "${widget.user.followers.toString()} followers ",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
-                        ),
-                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          followersAsync.when(
+                            data: (followers) => Text(
+                              "${followers.length} Followers",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            loading: () => CircularProgressIndicator(),
+                            error: (e, _) => Text("Error: $e"),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.1,
+                          ),
+                          widget.user.uid == _currentUser.uid
+                              ? followingAsync.when(
+                                  data: (followers) => Text(
+                                    "${followers.length} Followings",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  loading: () => CircularProgressIndicator(),
+                                  error: (e, _) => Text("Error: $e"),
+                                )
+                              : Text(''),
+                        ],
+                      )
                     ],
-                  )
+                  ),
                 ],
               ),
               widget.user.uid != _currentUser.uid
-                  ? CustomButton(
-                      text: "Follow",
+                  ? SizedBox(
+                      height: 50,
                       width: double.infinity,
-                      onPressed: () {
-                        //todo following logic
-                      },
+                      child: FollowButton(
+                          currentUserId: _currentUser.uid,
+                          targetUserId: widget.user.uid),
                     )
                   : Text(""),
               feedAsync.when(
@@ -80,6 +110,7 @@ class _SingleUserScreenState extends ConsumerState<SingleUserScreen> {
                               SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: 4 / 6,
                             crossAxisCount: 2,
+                            crossAxisSpacing: 10,
                           ),
                           itemCount: posts.length,
                           itemBuilder: (context, index) {
