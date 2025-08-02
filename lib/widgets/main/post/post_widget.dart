@@ -120,9 +120,7 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
             _DialogOption(
               icon: Icons.edit,
               text: "Edit",
-              onTap: () {
-                // TODO: Add edit functionality
-              },
+              onTap: () {},
             ),
             const Divider(),
             _DialogOption(

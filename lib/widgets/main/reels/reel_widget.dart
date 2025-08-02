@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socially/models/reel_model.dart';
-import 'package:socially/services/auth/auth_services.dart';
-import 'package:socially/services/reels/reels_service.dart';
 import 'package:socially/widgets/main/reels/video_player_widget.dart';
 
 class ReelWidget extends ConsumerStatefulWidget {
