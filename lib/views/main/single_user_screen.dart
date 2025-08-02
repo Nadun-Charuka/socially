@@ -91,15 +91,14 @@ class _SingleUserScreenState extends ConsumerState<SingleUserScreen> {
                   ),
                 ],
               ),
-              widget.user.uid != _currentUser.uid
-                  ? SizedBox(
-                      height: 50,
-                      width: double.infinity,
-                      child: FollowButton(
-                          currentUserId: _currentUser.uid,
-                          targetUserId: widget.user.uid),
-                    )
-                  : Text(""),
+              if (widget.user.uid != _currentUser.uid)
+                SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: FollowButton(
+                      currentUserId: _currentUser.uid,
+                      targetUserId: widget.user.uid),
+                ),
               feedAsync.when(
                 data: (posts) {
                   return posts.isNotEmpty

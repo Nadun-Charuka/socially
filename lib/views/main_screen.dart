@@ -20,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
     ReelsScreen(),
     ProfileScreen(),
   ];
-  int _selectedIndex = 1;
+  int _selectedIndex = 4;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

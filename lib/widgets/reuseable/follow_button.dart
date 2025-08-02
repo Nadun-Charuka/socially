@@ -64,6 +64,7 @@ class _FollowButtonState extends ConsumerState<FollowButton> {
               : Icon(isFollowing ? Icons.person_remove : Icons.person_add),
           label: Text(
             isFollowing ? "Unfollow" : "Follow",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         );
       },

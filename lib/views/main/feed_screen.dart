@@ -14,20 +14,17 @@ class FeedScreen extends ConsumerWidget {
       body: feedAsync.when(
         data: (posts) {
           return posts.isNotEmpty
-              ? SingleChildScrollView(
-                  child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      final post = posts[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 16),
-                        child: PostWidget(post: post),
-                      );
-                    },
-                  ),
+              ? ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    final post = posts[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 16),
+                      child: PostWidget(post: post),
+                    );
+                  },
                 )
               : Center(
                   child: Text("No Feeds"),
