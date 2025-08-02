@@ -53,7 +53,10 @@ class _ReelWidgetState extends ConsumerState<ReelWidget> {
             const SizedBox(height: 8),
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: VideoPlayerWidget(videoUrl: widget.reel.videoUrl),
+              child: VideoPlayerWidget(
+                videoUrl: widget.reel.videoUrl,
+                reel: widget.reel,
+              ),
             ),
             const SizedBox(height: 8),
             Row(
@@ -64,26 +67,6 @@ class _ReelWidgetState extends ConsumerState<ReelWidget> {
                     // Handle like functionality
                   },
                 ),
-                const Spacer(),
-                (widget.reel.userId == AuthService().currentUser!.uid)
-                    ? Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              // Handle edit functionality
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () async {
-                              await ReelsService().deletReel(
-                                  widget.reel.reelId, widget.reel.videoUrl);
-                            },
-                          ),
-                        ],
-                      )
-                    : SizedBox(),
               ],
             ),
           ],

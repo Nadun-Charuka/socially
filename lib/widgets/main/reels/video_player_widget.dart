@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:socially/models/reel_model.dart';
+import 'package:socially/services/auth/auth_services.dart';
+import 'package:socially/services/reels/reels_service.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
+  final ReelModel reel;
   final String videoUrl;
-  const VideoPlayerWidget({super.key, required this.videoUrl});
+  const VideoPlayerWidget(
+      {super.key, required this.videoUrl, required this.reel});
 
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
@@ -75,7 +80,21 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             onPressed: togglePlayPause,
             icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
           ),
-        )
+        ),
+        if (widget.reel.userId == AuthService().currentUser!.uid)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: IconButton(
+              iconSize: 40,
+              color: Colors.red,
+              onPressed: () async {
+                await ReelsService()
+                    .deletReel(widget.reel.reelId, widget.reel.videoUrl);
+              },
+              icon: Icon(Icons.delete),
+            ),
+          )
       ],
     );
   }
